@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    margin: 0;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 15px;
+}
+
+.date-box {
+    margin: 15px;
+    font-size: 18px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.prayer-box {
+    background: white;
+    color: black;
+    margin: 10px auto;
+    padding: 15px;
+    width: 280px;
+    border-radius: 12px;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.prayer-box:hover {
+    transform: scale(1.05);
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    animation: bounce 0.4s;
+}
+
+.progress-section {
+    margin: 20px auto;
+    width: 90%;
+}
+
+.progress-bar {
+    width: 100%;
+    background: #ddd;
+    height: 20px;
+    border-radius: 10px;
+}
+
+#progressFill {
+    height: 100%;
+    width: 0%;
+    background: #4caf50;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+.history {
+    margin-top: 20px;
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background: #ffcc00;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+canvas {
+    max-width: 90%;
+    margin: 20px auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+}
+
+@keyframes bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
