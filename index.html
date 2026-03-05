@@ -1,47 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Namaz Tracker Pro Max</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>Namaz Tracker Pro Max</title>
+
+<!-- PERFECT MOBILE SCALING -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 </head>
+
 <body>
-    <!-- Floating stars -->
-    <div class="star" style="--i:1;"></div>
-    <div class="star" style="--i:2;"></div>
-    <div class="star" style="--i:3;"></div>
-    <div class="star" style="--i:4;"></div>
-    <div class="star" style="--i:5;"></div>
 
-    <div class="container">
-        <h1>🌙 Namaz Tracker Pro Max</h1>
+<div class="container">
 
-        <div id="dateDisplay" class="date-box"></div>
+<h1>🌙 Namaz Tracker</h1>
 
-        <div id="progressSection" class="progress-section">
-            <h3>Monthly Progress</h3>
-            <div class="progress-bar">
-                <div id="progressFill"></div>
-            </div>
-            <p id="progressText"></p>
-            <h3>Total Qaza: <span id="qazaCount">0</span></h3>
-        </div>
+<div id="dateDisplay" class="date-box"></div>
 
-        <div id="prayerContainer"></div>
-
-        <button onclick="showHistory()">View History</button>
-
-        <div id="historySection" class="history"></div>
-
-        <canvas id="prayerChart"></canvas>
+<div class="progress-section">
+    <h3>Monthly Progress</h3>
+    <div class="progress-bar">
+        <div id="progressFill"></div>
     </div>
+    <p id="progressText"></p>
+    <h3>Total Qaza: <span id="qazaCount">0</span></h3>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="chart.js"></script>
-    <script src="script.js"></script>
-    <footer class="creator-footer">
+<div id="prayerContainer"></div>
+
+<button onclick="showHistory()">View History</button>
+
+<div id="historySection" class="history"></div>
+
+<canvas id="prayerChart"></canvas>
+
+</div>
+
+<footer class="creator-footer">
     Created by <span class="creator-name">Ans Riaz</span>
-    </footer>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="chart.js"></script>
+<script src="script.js"></script>
+
 </body>
-    </html>
+</html>
