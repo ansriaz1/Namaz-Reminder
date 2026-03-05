@@ -1,8 +1,8 @@
 const prayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
-/* =========================
+/* =====================
    MULTI USER SYSTEM
-========================= */
+===================== */
 let currentUser = localStorage.getItem("currentUser");
 if (!currentUser) {
     currentUser = prompt("Enter your name:");
@@ -11,52 +11,59 @@ if (!currentUser) {
 
 let allUsers = JSON.parse(localStorage.getItem("allUsers")) || {};
 if (!allUsers[currentUser]) allUsers[currentUser] = {};
-
 let data = allUsers[currentUser];
 
-/* =========================
-   DATE SYSTEM
-========================= */
-const today = new Date();
-const gregorianDate = today.toISOString().split("T")[0];
-const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+/* =====================
+   TODAY DATE
+===================== */
+const todayObj = new Date();
+const today = todayObj.toISOString().split("T")[0];
 
-const hijriDate = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-}).format(today);
+/* =====================
+   DISPLAY DATE
+===================== */
+function displayDate(dateString) {
 
-document.getElementById("dateDisplay").innerHTML =
-    `${dayName}<br>
-     Gregorian: ${gregorianDate}<br>
-     Hijri: ${hijriDate}`;
+    const dateObj = new Date(dateString);
+    const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
 
-/* =========================
-   INITIALIZE TODAY
-========================= */
-if (!data[gregorianDate]) {
-    data[gregorianDate] = {};
-    prayers.forEach(p => data[gregorianDate][p] = false);
+    const hijriDate = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }).format(dateObj);
+
+    document.getElementById("dateDisplay").innerHTML =
+        `${dayName}<br>
+         Gregorian: ${dateString}<br>
+         Hijri: ${hijriDate}`;
 }
 
-/* =========================
-   SAVE DATA
-========================= */
+/* =====================
+   INITIALIZE DATE DATA
+===================== */
+function ensureDateExists(date) {
+    if (!data[date]) {
+        data[date] = {};
+        prayers.forEach(p => data[date][p] = false);
+    }
+}
+
+/* =====================
+   SAVE
+===================== */
 function saveData() {
     allUsers[currentUser] = data;
     localStorage.setItem("allUsers", JSON.stringify(allUsers));
 }
 
-/* =========================
-   RENDER PRAYERS (ANY DATE)
-========================= */
+/* =====================
+   RENDER PRAYERS
+===================== */
 function renderPrayers(date) {
 
-    if (!data[date]) {
-        data[date] = {};
-        prayers.forEach(p => data[date][p] = false);
-    }
+    ensureDateExists(date);
+    displayDate(date);
 
     const container = document.getElementById("prayerContainer");
     container.innerHTML = "";
@@ -65,7 +72,7 @@ function renderPrayers(date) {
 
         const div = document.createElement("div");
         div.className = "prayer-box";
-        div.style.animation = `fadeIn 0.4s ease forwards ${index*0.15}s`;
+        div.style.animation = `fadeIn 0.4s ease forwards ${index*0.1}s`;
 
         const label = document.createElement("label");
         label.innerText = prayer + " ";
@@ -74,12 +81,12 @@ function renderPrayers(date) {
         checkbox.type = "checkbox";
         checkbox.checked = data[date][prayer];
 
-        checkbox.addEventListener("change", () => {
-            data[date][prayer] = checkbox.checked;
+        checkbox.onchange = function () {
+            data[date][prayer] = this.checked;
             saveData();
             updateProgress();
             generateChart(data);
-        });
+        };
 
         div.appendChild(label);
         div.appendChild(checkbox);
@@ -87,14 +94,17 @@ function renderPrayers(date) {
     });
 }
 
-/* =========================
-   MONTHLY PROGRESS
-========================= */
+/* =====================
+   PROGRESS
+===================== */
 function updateProgress() {
-    let total = 0, completed = 0, qaza = 0;
 
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
+    let total = 0;
+    let completed = 0;
+    let qaza = 0;
+
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
 
     for (let date in data) {
         const d = new Date(date);
@@ -109,31 +119,30 @@ function updateProgress() {
 
     const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-    const progressFill = document.getElementById("progressFill");
-    progressFill.style.width = percent + "%";
-    progressFill.style.boxShadow = `0 0 20px rgba(255, 215, 0, ${percent/100})`;
-
+    document.getElementById("progressFill").style.width = percent + "%";
     document.getElementById("progressText").innerText =
         percent + "% Completed This Month";
 
     document.getElementById("qazaCount").innerText = qaza;
 }
 
-/* =========================
-   INTERACTIVE HISTORY
-========================= */
+/* =====================
+   HISTORY
+===================== */
 function showHistory() {
 
     const historyDiv = document.getElementById("historySection");
-    historyDiv.innerHTML = "<h3>Select a Date</h3>";
+    historyDiv.innerHTML = "<h3>Select Date</h3>";
 
-    Object.keys(data).sort().reverse().forEach(date => {
+    const dates = Object.keys(data).sort().reverse();
+
+    dates.forEach(date => {
 
         const btn = document.createElement("button");
         btn.innerText = date;
         btn.style.margin = "5px";
 
-        btn.onclick = () => {
+        btn.onclick = function () {
             renderPrayers(date);
             window.scrollTo({ top: 0, behavior: "smooth" });
         };
@@ -142,30 +151,23 @@ function showHistory() {
     });
 }
 
-/* =========================
-   NOTIFICATIONS
-========================= */
+/* =====================
+   NOTIFICATION
+===================== */
 if ("Notification" in window) Notification.requestPermission();
 
-setTimeout(() => {
-    if (Notification.permission === "granted") {
-        new Notification("Namaz Reminder", {
-            body: "Have you completed your prayers today?"
-        });
-    }
-}, 4000);
-
-/* =========================
+/* =====================
    INITIAL LOAD
-========================= */
-renderPrayers(gregorianDate);
+===================== */
+ensureDateExists(today);
+renderPrayers(today);
 saveData();
 updateProgress();
 generateChart(data);
 
-/* =========================
+/* =====================
    PWA
-========================= */
+===================== */
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
 }
